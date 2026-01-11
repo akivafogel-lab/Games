@@ -1,174 +1,339 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Car Dodge Levels</title>
+<title>Super Car Battle</title>
 
 <style>
 body{
-  text-align:center;
-  font-family:Arial;
-  background:#111;
-  color:white;
   margin:0;
-  padding:0;
+  background:#0b0b0b;
+  color:white;
+  font-family:Arial;
+  text-align:center;
 }
 
+/* HUD */
+#hud{
+  padding:10px;
+  font-size:16px;
+}
+
+/* GAME AREA */
 #game{
-  width:300px;
-  height:450px;
-  background:#666;
-  margin:20px auto;
+  width:360px;
+  height:520px;
+  background:#444;
+  margin:auto;
   position:relative;
   overflow:hidden;
   border:4px solid white;
-  border-radius:10px;
+  border-radius:12px;
 }
 
+/* CAR */
 #car{
-  width:40px;
-  height:60px;
-  background:red;
+  width:50px;
+  height:80px;
+  background:linear-gradient(blue,lightblue);
+  border-radius:10px;
   position:absolute;
   bottom:10px;
-  left:130px;
-  border-radius:8px;
+  left:155px;
 }
 
-.obstacle{
+/* wheels */
+#wheel1,#wheel2{
+  width:12px;
+  height:12px;
+  background:black;
+  border-radius:50%;
+  position:absolute;
+  bottom:-6px;
+}
+#wheel1{ left:6px; }
+#wheel2{ right:6px; }
+
+/* JUMP */
+.jump{
+  animation:jump 0.6s ease;
+}
+@keyframes jump{
+  0%{ bottom:10px; }
+  50%{ bottom:120px; }
+  100%{ bottom:10px; }
+}
+
+/* OBSTACLES */
+.enemy{
   width:40px;
   height:40px;
-  background:black;
+  background:brown;
   position:absolute;
   top:0;
-  border-radius:5px;
+  border-radius:6px;
 }
-
+.rocket{ background:red; }
 .boss{
+  background:purple;
   width:80px;
   height:80px;
-  background:purple;
 }
 
+/* BULLETS */
+.bullet{
+  width:6px;
+  height:12px;
+  background:yellow;
+  position:absolute;
+  bottom:90px;
+}
+.water{
+  width:8px;
+  height:16px;
+  background:cyan;
+}
+
+/* COIN */
+.coin{
+  width:16px;
+  height:16px;
+  background:gold;
+  border-radius:50%;
+  position:absolute;
+}
+
+/* WHEEL */
+#wheelBox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+}
+#wheel{
+  width:200px;
+  height:200px;
+  background:conic-gradient(gold 0 25%, red 25% 50%, blue 50% 75%, green 75% 100%);
+  border-radius:50%;
+  margin:120px auto;
+}
+
+/* BUTTONS */
 button{
   font-size:18px;
-  padding:10px 20px;
-  margin:6px;
-  border:none;
-  border-radius:10px;
-  background:#00aaff;
-  color:white;
-}
-button:active{
-  transform:scale(0.95);
+  padding:10px;
+  margin:5px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🚗 Car Dodge</h2>
-<p>Level: <span id="level">1</span></p>
+<h2>🚗 Super Car Battle</h2>
 
-<div id="game">
-  <div id="car"></div>
+<div id="hud">
+Level: <span id="level">1</span> |
+Coins: <span id="coins">0</span> |
+Gun: <span id="gun">None</span> |
+Water Fuel: <span id="fuel">5</span>
 </div>
 
-<button onclick="moveLeft()">⬅️ Left</button>
-<button onclick="moveRight()">➡️ Right</button>
+<div id="game">
+  <div id="car">
+    <div id="wheel1"></div>
+    <div id="wheel2"></div>
+  </div>
+</div>
+
+<button onclick="moveLeft()">⬅️</button>
+<button onclick="moveRight()">➡️</button>
+<button onclick="jump()">⬆️ Jump</button>
+<button onclick="shoot()">🔫</button>
+<button onclick="waterGun()">💧</button>
+
+<div id="wheelBox" onclick="closeWheel()">
+  <div id="wheel"></div>
+  <p>🎡 You spun the wheel!</p>
+</div>
 
 <script>
 const game = document.getElementById("game");
 const car = document.getElementById("car");
 const levelText = document.getElementById("level");
+const coinsText = document.getElementById("coins");
+const gunText = document.getElementById("gun");
+const fuelText = document.getElementById("fuel");
+const wheelBox = document.getElementById("wheelBox");
 
 let level = 1;
+let coins = 0;
 let speed = 2;
-let spawnRate = 1500;
+let spawnRate = 1400;
 let playing = true;
 
-/* MOVE CAR */
+let hasGun = false;
+let waterFuel = 5;
+let dodged = 0;
+
+/* MOVE */
 function moveLeft(){
-  if(car.offsetLeft > 0){
-    car.style.left = car.offsetLeft - 20 + "px";
-  }
+  if(car.offsetLeft > 0)
+    car.style.left = car.offsetLeft - 30 + "px";
 }
 function moveRight(){
-  if(car.offsetLeft < 260){
-    car.style.left = car.offsetLeft + 20 + "px";
+  if(car.offsetLeft < 310)
+    car.style.left = car.offsetLeft + 30 + "px";
+}
+
+/* JUMP */
+function jump(){
+  if(!car.classList.contains("jump")){
+    car.classList.add("jump");
+    setTimeout(()=>car.classList.remove("jump"),600);
   }
 }
 
-/* CREATE OBSTACLES */
-function createObstacle(){
+/* SHOOT */
+function shoot(){
+  if(!hasGun) return;
+
+  const b = document.createElement("div");
+  b.className = "bullet";
+  b.style.left = car.offsetLeft + 22 + "px";
+  game.appendChild(b);
+
+  const fly = setInterval(()=>{
+    b.style.bottom = (b.offsetBottom || 90) + 10 + "px";
+
+    enemies.forEach(e=>{
+      if(hit(b,e)){
+        if(e.classList.contains("rocket")){
+          addCoin(e.offsetLeft,e.offsetTop);
+        }
+        e.remove();
+        b.remove();
+      }
+    });
+  },20);
+}
+
+/* WATER GUN */
+function waterGun(){
+  if(waterFuel <= 0) return;
+  waterFuel--;
+  fuelText.textContent = waterFuel;
+
+  const w = document.createElement("div");
+  w.className = "bullet water";
+  w.style.left = car.offsetLeft + 22 + "px";
+  game.appendChild(w);
+
+  const fly = setInterval(()=>{
+    w.style.bottom = (w.offsetBottom || 90) + 12 + "px";
+    enemies.forEach(e=>{
+      if(hit(w,e)){
+        e.remove();
+        w.remove();
+      }
+    });
+  },20);
+}
+
+/* ENEMIES */
+let enemies = [];
+
+function spawnEnemy(){
   if(!playing) return;
 
-  const obs = document.createElement("div");
+  const e = document.createElement("div");
 
-  if(level % 100 === 0){
-    obs.className = "obstacle boss";
+  if(level % 10 === 0){
+    e.className = "enemy boss";
+  }else if(level === 1){
+    e.className = "enemy";
   }else{
-    obs.className = "obstacle";
+    e.className = "enemy rocket";
   }
 
-  obs.style.left = Math.random() * 260 + "px";
-  obs.style.top = "0px";
-  game.appendChild(obs);
+  e.style.left = Math.random()*320 + "px";
+  e.style.top = "0px";
+  game.appendChild(e);
+  enemies.push(e);
 
   const fall = setInterval(()=>{
-    obs.style.top = obs.offsetTop + speed + "px";
+    e.style.top = e.offsetTop + speed + "px";
 
-    // collision
-    if(
-      obs.offsetTop + 40 > car.offsetTop &&
-      obs.offsetTop < car.offsetTop + 60 &&
-      Math.abs(obs.offsetLeft - car.offsetLeft) < 40
-    ){
+    if(hit(e,car)){
       gameOver();
-      clearInterval(fall);
     }
 
-    if(obs.offsetTop > 460){
-      obs.remove();
+    if(e.offsetTop > 520){
+      e.remove();
+      enemies = enemies.filter(x=>x!==e);
       clearInterval(fall);
+
+      dodged++;
+      if(dodged % 50 === 0) nextLevel();
     }
   },20);
 }
 
-/* SPAWN LOOP */
-let spawner = setInterval(createObstacle, spawnRate);
+let spawner = setInterval(spawnEnemy, spawnRate);
 
-/* LEVEL SYSTEM */
-setInterval(()=>{
-  if(!playing) return;
+/* HIT CHECK */
+function hit(a,b){
+  const ar=a.getBoundingClientRect();
+  const br=b.getBoundingClientRect();
+  return !(ar.right < br.left || ar.left > br.right ||
+           ar.bottom < br.top || ar.top > br.bottom);
+}
 
+/* COINS */
+function addCoin(x,y){
+  coins++;
+  coinsText.textContent = coins;
+
+  if(coins % 100 === 0){
+    openWheel();
+  }
+}
+
+/* LEVEL UP */
+function nextLevel(){
   level++;
   levelText.textContent = level;
 
-  speed += 0.3;
+  speed += 0.7;
+  if(spawnRate > 500) spawnRate -= 100;
 
-  if(spawnRate > 500){
-    spawnRate -= 50;
-  }
-
-  if(level % 100 === 0){
-    alert("👑 BOSS LEVEL " + level + "!");
-  }
-},5000);
-
-/* UPDATE SPAWNER SPEED */
-setInterval(()=>{
   clearInterval(spawner);
-  spawner = setInterval(createObstacle, spawnRate);
-},2000);
+  spawner = setInterval(spawnEnemy, spawnRate);
+
+  if(level % 10 === 1 && level>1){
+    hasGun = true;
+    gunText.textContent = "Blaster";
+  }
+
+  alert(level % 10 === 0 ? "👑 BOSS LEVEL!" : "⚡ LEVEL "+level);
+}
+
+/* WHEEL */
+function openWheel(){
+  wheelBox.style.display="block";
+}
+function closeWheel(){
+  wheelBox.style.display="none";
+  waterFuel += 3;
+  fuelText.textContent = waterFuel;
+}
 
 /* GAME OVER */
 function gameOver(){
-  playing = false;
-  alert("💥 GAME OVER!\nYou reached level " + level);
+  playing=false;>
+  alert("💥 GAME OVER!\nLevel: "+level+"\nCoins: "+coins);
   location.reload();
 }
 </script>
 
 </body>
-<
+</html>
