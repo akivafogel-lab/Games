@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body style="background:#333;color:white;text-align:center;">
+<h2>🏎️ Racing</h2>
+<p>Tap to go faster!</p>
+
+<div id="car" style="width:60px;height:30px;background:blue;margin:auto;">
+Speed: 0
+</div>
+
+<script>
+let speed=0;
+document.body.onclick=()=>{
+  speed++;
+  document.getElementById("car").innerText="Speed: "+speed;
+};
+</script>
+</body>
+</html>
