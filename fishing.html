@@ -1,1 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>🎣 Fishing Frenzy</h2>
+<p id="fish">Fish: 0</p>
+<button onclick="catchFish()">Cast Rod</button>
 
+<script>
+let f=0;
+function catchFish(){
+  f++;
+  document.getElementById("fish").innerText="Fish: "+f;
+}
+</script>
+</body>
+</html>
