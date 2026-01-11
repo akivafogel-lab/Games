@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>👻 Ghost Catch</h2>
+<p id="caught">Caught: 0</p>
+<button onclick="catchGhost()">Catch</button>
+
+<script>
+let g=0;
+function catchGhost(){
+  g++;
+  document.getElementById("caught").innerText="Caught: "+g;
+}
+</script>
+</body>
+</html>
