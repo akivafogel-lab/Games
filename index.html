@@ -1,382 +1,167 @@
-<!DOCTYPE html>
+index.html   ← MAIN HUB
+bus.html
+police.html
+race.html
+obby.html
+boss.html<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Super Car Battle</title>
-
-  <style>
-    body{
-      margin:0;
-      background:#0b0b0b;
-      color:white;
-      font-family:Arial;
-      text-align:center;
-    }
-
-    #hud{
-      padding:10px;
-      font-size:16px;
-    }
-
-    #game{
-      width:360px;
-      height:520px;
-      background:#444;
-      margin:auto;
-      position:relative;
-      overflow:hidden;
-      border:4px solid white;
-      border-radius:12px;
-      touch-action: manipulation;
-    }
-
-    #car{
-      width:50px;
-      height:80px;
-      background:linear-gradient(blue,lightblue);
-      border-radius:10px;
-      position:absolute;
-      bottom:10px;
-      left:155px;
-    }
-
-    #wheel1,#wheel2{
-      width:12px;
-      height:12px;
-      background:black;
-      border-radius:50%;
-      position:absolute;
-      bottom:-6px;
-    }
-    #wheel1{ left:6px; }
-    #wheel2{ right:6px; }
-
-    .jump{
-      animation:jump 0.6s ease;
-    }
-    @keyframes jump{
-      0%{ bottom:10px; }
-      50%{ bottom:120px; }
-      100%{ bottom:10px; }
-    }
-
-    .enemy{
-      width:40px;
-      height:40px;
-      background:brown;
-      position:absolute;
-      top:0;
-      border-radius:6px;
-    }
-    .rocket{ background:red; }
-    .boss{
-      background:purple;
-      width:80px;
-      height:80px;
-    }
-
-    .bullet{
-      width:6px;
-      height:12px;
-      background:yellow;
-      position:absolute;
-      bottom:90px;
-    }
-    .water{
-      width:8px;
-      height:16px;
-      background:cyan;
-    }
-
-    .coin{
-      width:16px;
-      height:16px;
-      background:gold;
-      border-radius:50%;
-      position:absolute;
-    }
-
-    #wheelBox{
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.8);
-    }
-    #wheel{
-      width:200px;
-      height:200px;
-      background:conic-gradient(gold 0 25%, red 25% 50%, blue 50% 75%, green 75% 100%);
-      border-radius:50%;
-      margin:120px auto;
-    }
-
-    button{
-      font-size:18px;
-      padding:10px;
-      margin:5px;
-    }
-
-    .hint{
-      font-size:12px;
-      opacity:.8;
-      margin-top:6px;
-    }
-  </style>
+<title>My Mini Roblox</title>
+<style>
+body{
+  background:#111;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+}
+button{
+  font-size:22px;
+  padding:15px 25px;
+  margin:10px;
+}
+iframe{
+  width:360px;
+  height:520px;
+  border:4px solid white;
+  border-radius:10px;
+}
+</style>
 </head>
 
 <body>
-  <h2>🚗 Super Car Battle</h2>
 
-  <div id="hud">
-    Level: <span id="level">1</span> |
-    Coins: <span id="coins">0</span> |
-    Gun: <span id="gun">None</span> |
-    Water Fuel: <span id="fuel">5</span>
-    <div class="hint">Keys: ← → to move, ↑ to jump, Space = shoot, Z = water</div>
-  </div>
+<h1>🎮 My Mini Roblox</h1>
+<p>Pick a game:</p>
 
-  <div id="game">
-    <div id="car">
-      <div id="wheel1"></div>
-      <div id="wheel2"></div>
-    </div>
-  </div>
+<button onclick="loadGame('bus')">🚌 Bus Game</button>
+<button onclick="loadGame('police')">🚓 Police Chase</button>
+<button onclick="loadGame('race')">🏎️ Racing</button>
+<button onclick="loadGame('obby')">🧗 Obby</button>
+<button onclick="loadGame('boss')">👑 Boss Fight</button>
 
-  <button onclick="moveLeft()">⬅️</button>
-  <button onclick="moveRight()">➡️</button>
-  <button onclick="jump()">⬆️ Jump</button>
-  <button onclick="shoot()">🔫</button>
-  <button onclick="waterGun()">💧</button>
+<br><br>
 
-  <div id="wheelBox" onclick="closeWheel()">
-    <div id="wheel"></div>
-    <p>🎡 You spun the wheel! (Tap to close)</p>
-  </div>
+<iframe id="gameFrame"></iframe>
 
-  <script>
-    const game = document.getElementById("game");
-    const car = document.getElementById("car");
+<script>
+function loadGame(game){
+  const frame = document.getElementById("gameFrame");
 
-    const levelText = document.getElementById("level");
-    const coinsText = document.getElementById("coins");
-    const gunText = document.getElementById("gun");
-    const fuelText = document.getElementById("fuel");
-    const wheelBox = document.getElementById("wheelBox");
+  if(game==="bus") frame.src="bus.html";
+  if(game==="police") frame.src="police.html";
+  if(game==="race") frame.src="race.html";
+  if(game==="obby") frame.src="obby.html";
+  if(game==="boss") frame.src="boss.html";
+}
+</script>
 
-    let level = 1;
-    let coins = 0;
-    let speed = 2;
-    let spawnRate = 1400;
-    let playing = true;
+</body>
+</html><!DOCTYPE html>
+<html>
+<body style="background:#222;color:white;text-align:center;">
+<h2>🚌 Bus Game</h2>
+<p>Tap the screen to move the bus!</p>
 
-    let hasGun = false;
-    let waterFuel = 5;
-    let dodged = 0;
+<div id="bus" style="width:80px;height:40px;background:yellow;margin:auto;"></div>
 
-    const MAX_LEFT = 0;
-    const MAX_RIGHT = 360 - 50; // game width - car width
+<script>
+let x=0;
+document.body.onclick=()=>{
+  x+=20;
+  document.getElementById("bus").style.marginLeft=x+"px";
+};
+</script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<body style="background:#000;color:white;text-align:center;">
+<h2>🚓 Police Chase</h2>
+<p>Click the bad guy to catch him!</p>
 
-    // Keep arrays of active objects
-    let enemies = [];
-    let bullets = [];
+<div id="bad" style="width:50px;height:50px;background:red;margin:auto;"></div>
 
-    // --- movement helpers ---
-    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+<script>
+document.getElementById("bad").onclick=()=>{
+  alert("🚨 You caught the bad guy!");
+};
+</script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<body style="background:#333;color:white;text-align:center;">
+<h2>🏎️ Racing</h2>
+<p>Tap to go faster!</p>
 
-    function moveLeft(){
-      if(!playing) return;
-      const x = clamp(car.offsetLeft - 30, MAX_LEFT, MAX_RIGHT);
-      car.style.left = x + "px";
-    }
+<div id="car" style="width:60px;height:30px;background:blue;margin:auto;">
+Speed: 0
+</div>
 
-    function moveRight(){
-      if(!playing) return;
-      const x = clamp(car.offsetLeft + 30, MAX_LEFT, MAX_RIGHT);
-      car.style.left = x + "px";
-    }
+<script>
+let speed=0;
+document.body.onclick=()=>{
+  speed++;
+  document.getElementById("car").innerText="Speed: "+speed;
+};
+</script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<body style="background:#555;color:white;text-align:center;">
+<h2>🧗 Obby</h2>
+<p>Tap to jump platforms!</p>
 
-    function jump(){
-      if(!playing) return;
-      if(!car.classList.contains("jump")){
-        car.classList.add("jump");
-        setTimeout(()=>car.classList.remove("jump"),600);
-      }
-    }
+<div id="player" style="width:40px;height:40px;background:lime;margin:auto;"></div>
 
-    // --- collision ---
-    function hit(a,b){
-      const ar = a.getBoundingClientRect();
-      const br = b.getBoundingClientRect();
-      return !(ar.right < br.left || ar.left > br.right ||
-               ar.bottom < br.top || ar.top > br.bottom);
-    }
+<script>
+let jumps=0;
+document.body.onclick=()=>{
+  jumps++;
+  document.getElementById("player").innerText="Jump "+jumps;
+};
+</script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<body style="background:#220;color:white;text-align:center;">
+<h2>👑 Boss Fight</h2>
+<p>Tap to hit the boss!</p>
 
-    // --- bullets ---
-    function makeBullet(type){
-      const el = document.createElement("div");
-      el.className = type === "water" ? "bullet water" : "bullet";
-      el.style.left = (car.offsetLeft + 22) + "px";
-      el.style.bottom = "90px";
-      game.appendChild(el);
+<div id="boss" style="width:100px;height:100px;background:purple;margin:auto;">
+HP: 10
+</div>
 
-      bullets.push({
-        el,
-        vy: type === "water" ? 12 : 10,
-        type
-      });
-    }
+<script>
+let hp=10;
+document.getElementById("boss").onclick=()=>{
+  hp--;
+  document.getElementById("boss").innerText="HP: "+hp;
+  if(hp<=0){
+    alert("🎉 YOU BEAT THE BOSS!");
+    hp=10;
+  }
+};
+</script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<body style="background:#220;color:white;text-align:center;">
+<h2>👑 Boss Fight</h2>
+<p>Tap to hit the boss!</p>
 
-    function shoot(){
-      if(!playing) return;
-      if(!hasGun) return;
-      makeBullet("normal");
-    }
+<div id="boss" style="width:100px;height:100px;background:purple;margin:auto;">
+HP: 10
+</div>
 
-    function waterGun(){
-      if(!playing) return;
-      if(waterFuel <= 0) return;
-      waterFuel--;
-      fuelText.textContent = waterFuel;
-      makeBullet("water");
-    }
-
-    // --- enemies ---
-    function spawnEnemy(){
-      if(!playing) return;
-
-      const e = document.createElement("div");
-
-      if(level % 10 === 0){
-        e.className = "enemy boss";
-      }else if(level === 1){
-        e.className = "enemy";
-      }else{
-        e.className = "enemy rocket";
-      }
-
-      e.style.left = Math.floor(Math.random()*321) + "px";
-      e.style.top = "0px";
-      game.appendChild(e);
-
-      enemies.push({ el: e });
-    }
-
-    let spawner = setInterval(spawnEnemy, spawnRate);
-
-    // --- coins + wheel ---
-    function addCoin(){
-      coins++;
-      coinsText.textContent = coins;
-      if(coins % 100 === 0){
-        openWheel();
-      }
-    }
-
-    function openWheel(){
-      wheelBox.style.display = "block";
-    }
-    function closeWheel(){
-      wheelBox.style.display = "none";
-      waterFuel += 3;
-      fuelText.textContent = waterFuel;
-    }
-
-    // --- level up ---
-    function nextLevel(){
-      level++;
-      levelText.textContent = level;
-
-      speed += 0.7;
-      if(spawnRate > 500) spawnRate -= 100;
-
-      clearInterval(spawner);
-      spawner = setInterval(spawnEnemy, spawnRate);
-
-      if(level % 10 === 1 && level > 1){
-        hasGun = true;
-        gunText.textContent = "Blaster";
-      }
-
-      alert(level % 10 === 0 ? "👑 BOSS LEVEL!" : "⚡ LEVEL " + level);
-    }
-
-    // --- game over ---
-    function gameOver(){
-      if(!playing) return;
-      playing = false;
-      clearInterval(spawner);
-      alert("💥 GAME OVER!\nLevel: " + level + "\nCoins: " + coins);
-      location.reload();
-    }
-
-    // --- main update loop (smooth + no runaway intervals) ---
-    function tick(){
-      if(!playing) return;
-
-      // Move enemies down
-      for(let i = enemies.length - 1; i >= 0; i--){
-        const e = enemies[i].el;
-        e.style.top = (e.offsetTop + speed) + "px";
-
-        // hit car
-        if(hit(e, car)){
-          gameOver();
-          return;
-        }
-
-        // offscreen
-        if(e.offsetTop > 520){
-          e.remove();
-          enemies.splice(i, 1);
-
-          dodged++;
-          if(dodged % 50 === 0) nextLevel();
-        }
-      }
-
-      // Move bullets up + handle bullet hits
-      for(let i = bullets.length - 1; i >= 0; i--){
-        const b = bullets[i].el;
-        const cur = parseInt(b.style.bottom || "90", 10);
-        b.style.bottom = (cur + bullets[i].vy) + "px";
-
-        // remove if offscreen
-        if(cur > 560){
-          b.remove();
-          bullets.splice(i, 1);
-          continue;
-        }
-
-        // check bullet vs enemies
-        for(let j = enemies.length - 1; j >= 0; j--){
-          const e = enemies[j].el;
-          if(hit(b, e)){
-            // coin reward for rockets (same as your idea)
-            if(e.classList.contains("rocket")){
-              addCoin();
-            }
-            e.remove();
-            enemies.splice(j, 1);
-
-            b.remove();
-            bullets.splice(i, 1);
-            break;
-          }
-        }
-      }
-
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-
-    // --- keyboard controls ---
-    document.addEventListener("keydown", (ev) => {
-      if(ev.key === "ArrowLeft") moveLeft();
-      if(ev.key === "ArrowRight") moveRight();
-      if(ev.key === "ArrowUp") jump();
-      if(ev.code === "Space") { ev.preventDefault(); shoot(); }
-      if(ev.key.toLowerCase() === "z") waterGun();
-    });
-  </script>
+<script>
+let hp=10;
+document.getElementById("boss").onclick=()=>{
+  hp--;
+  document.getElementById("boss").innerText="HP: "+hp;
+  if(hp<=0){
+    alert("🎉 YOU BEAT THE BOSS!");
+    hp=10;
+  }
+};
+</script>
 </body>
 </html>
