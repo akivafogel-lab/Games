@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>🚀 Rocket Launch</h2>
+<p id="height">Height: 0</p>
+<button onclick="launch()">Launch</button>
+
+<script>
+let h=0;
+function launch(){
+  h+=10;
+  document.getElementById("height").innerText="Height: "+h;
+}
+</script>
+</body>
+</html>
