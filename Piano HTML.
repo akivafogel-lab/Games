@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>🎹 Piano Tap</h2>
+<p id="notes">Notes: 0</p>
+<button onclick="play()">Play Note</button>
+
+<script>
+let n=0;
+function play(){
+  n++;
+  document.getElementById("notes").innerText="Notes: "+n;
+}
+</script>
+</body>
+</html>
