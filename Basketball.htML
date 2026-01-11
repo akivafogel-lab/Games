@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>🏀 Basketball Shot</h2>
+<p id="score">Score: 0</p>
+<button onclick="shoot()">Shoot</button>
+
+<script>
+let s=0;
+function shoot(){
+  s++;
+  document.getElementById("score").innerText="Score: "+s;
+}
+</script>
+</body>
+</html>
