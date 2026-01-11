@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>🎾 Tennis Tap</h2>
+<p id="hits">Hits: 0</p>
+<button onclick="hit()">Hit Ball</button>
+
+<script>
+let hits=0;
+function hit(){
+  hits++;
+  document.getElementById("hits").innerText="Hits: "+hits;
+}
+</script>
+</body>
+</html>
