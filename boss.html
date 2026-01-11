@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>👑 Boss Clicker</h2>
+<p id="hp">Boss HP: 10</p>
+<button onclick="hit()">Attack</button>
+
+<script>
+let hp=10;
+function hit(){
+  hp--;
+  if(hp<=0){
+    alert("Boss defeated!");
+    hp=10;
+  }
+  document.getElementById("hp").innerText="Boss HP: "+hp;
+}
+</script>
+</body>
+</html>
