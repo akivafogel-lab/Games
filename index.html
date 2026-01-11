@@ -1,1 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Car Dodge Levels</title>
 
+<style>
+body{
+  text-align:center;
+  font-family:Arial;
+  background:#111;
+  color:white;
+  margin:0;
+  padding:0;
+}
+
+#game{
+  width:300px;
+  height:450px;
+  background:#666;
+  margin:20px auto;
+  position:relative;
+  overflow:hidden;
+  border:4px solid white;
+  border-radius:10px;
+}
+
+#car{
+  width:40px;
+  height:60px;
+  background:red;
+  position:absolute;
+  bottom:10px;
+  left:130px;
+  border-radius:8px;
+}
+
+.obstacle{
+  width:40px;
+  height:40px;
+  background:black;
+  position:absolute;
+  top:0;
+  border-radius:5px;
+}
+
+.boss{
+  width:80px;
+  height:80px;
+  background:purple;
+}
+
+button{
+  font-size:18px;
+  padding:10px 20px;
+  margin:6px;
+  border:none;
+  border-radius:10px;
+  background:#00aaff;
+  color:white;
+}
+button:active{
+  transform:scale(0.95);
+}
+</style>
+</head>
+
+<body>
+
+<h2>🚗 Car Dodge</h2>
+<p>Level: <span id="level">1</span></p>
+
+<div id="game">
+  <div id="car"></div>
+</div>
+
+<button onclick="moveLeft()">⬅️ Left</button>
+<button onclick="moveRight()">➡️ Right</button>
+
+<script>
+const game = document.getElementById("game");
+const car = document.getElementById("car");
+const levelText = document.getElementById("level");
+
+let level = 1;
+let speed = 2;
+let spawnRate = 1500;
+let playing = true;
+
+/* MOVE CAR */
+function moveLeft(){
+  if(car.offsetLeft > 0){
+    car.style.left = car.offsetLeft - 20 + "px";
+  }
+}
+function moveRight(){
+  if(car.offsetLeft < 260){
+    car.style.left = car.offsetLeft + 20 + "px";
+  }
+}
+
+/* CREATE OBSTACLES */
+function createObstacle(){
+  if(!playing) return;
+
+  const obs = document.createElement("div");
+
+  if(level % 100 === 0){
+    obs.className = "obstacle boss";
+  }else{
+    obs.className = "obstacle";
+  }
+
+  obs.style.left = Math.random() * 260 + "px";
+  obs.style.top = "0px";
+  game.appendChild(obs);
+
+  const fall = setInterval(()=>{
+    obs.style.top = obs.offsetTop + speed + "px";
+
+    // collision
+    if(
+      obs.offsetTop + 40 > car.offsetTop &&
+      obs.offsetTop < car.offsetTop + 60 &&
+      Math.abs(obs.offsetLeft - car.offsetLeft) < 40
+    ){
+      gameOver();
+      clearInterval(fall);
+    }
+
+    if(obs.offsetTop > 460){
+      obs.remove();
+      clearInterval(fall);
+    }
+  },20);
+}
+
+/* SPAWN LOOP */
+let spawner = setInterval(createObstacle, spawnRate);
+
+/* LEVEL SYSTEM */
+setInterval(()=>{
+  if(!playing) return;
+
+  level++;
+  levelText.textContent = level;
+
+  speed += 0.3;
+
+  if(spawnRate > 500){
+    spawnRate -= 50;
+  }
+
+  if(level % 100 === 0){
+    alert("👑 BOSS LEVEL " + level + "!");
+  }
+},5000);
+
+/* UPDATE SPAWNER SPEED */
+setInterval(()=>{
+  clearInterval(spawner);
+  spawner = setInterval(createObstacle, spawnRate);
+},2000);
+
+/* GAME OVER */
+function gameOver(){
+  playing = false;
+  alert("💥 GAME OVER!\nYou reached level " + level);
+  location.reload();
+}
+</script>
+
+</body>
+</html>
