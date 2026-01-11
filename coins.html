@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>🪙 Coin Collector</h2>
+<p id="coins">Coins: 0</p>
+<button onclick="collect()">Collect</button>
+
+<script>
+let c=0;
+function collect(){
+  c++;
+  document.getElementById("coins").innerText="Coins: "+c;
+}
+</script>
+</body>
+</html>
