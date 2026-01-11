@@ -1,339 +1,382 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Super Car Battle</title>
+  <meta charset="UTF-8" />
+  <title>Super Car Battle</title>
 
-<style>
-body{
-  margin:0;
-  background:#0b0b0b;
-  color:white;
-  font-family:Arial;
-  text-align:center;
-}
+  <style>
+    body{
+      margin:0;
+      background:#0b0b0b;
+      color:white;
+      font-family:Arial;
+      text-align:center;
+    }
 
-/* HUD */
-#hud{
-  padding:10px;
-  font-size:16px;
-}
+    #hud{
+      padding:10px;
+      font-size:16px;
+    }
 
-/* GAME AREA */
-#game{
-  width:360px;
-  height:520px;
-  background:#444;
-  margin:auto;
-  position:relative;
-  overflow:hidden;
-  border:4px solid white;
-  border-radius:12px;
-}
+    #game{
+      width:360px;
+      height:520px;
+      background:#444;
+      margin:auto;
+      position:relative;
+      overflow:hidden;
+      border:4px solid white;
+      border-radius:12px;
+      touch-action: manipulation;
+    }
 
-/* CAR */
-#car{
-  width:50px;
-  height:80px;
-  background:linear-gradient(blue,lightblue);
-  border-radius:10px;
-  position:absolute;
-  bottom:10px;
-  left:155px;
-}
+    #car{
+      width:50px;
+      height:80px;
+      background:linear-gradient(blue,lightblue);
+      border-radius:10px;
+      position:absolute;
+      bottom:10px;
+      left:155px;
+    }
 
-/* wheels */
-#wheel1,#wheel2{
-  width:12px;
-  height:12px;
-  background:black;
-  border-radius:50%;
-  position:absolute;
-  bottom:-6px;
-}
-#wheel1{ left:6px; }
-#wheel2{ right:6px; }
+    #wheel1,#wheel2{
+      width:12px;
+      height:12px;
+      background:black;
+      border-radius:50%;
+      position:absolute;
+      bottom:-6px;
+    }
+    #wheel1{ left:6px; }
+    #wheel2{ right:6px; }
 
-/* JUMP */
-.jump{
-  animation:jump 0.6s ease;
-}
-@keyframes jump{
-  0%{ bottom:10px; }
-  50%{ bottom:120px; }
-  100%{ bottom:10px; }
-}
+    .jump{
+      animation:jump 0.6s ease;
+    }
+    @keyframes jump{
+      0%{ bottom:10px; }
+      50%{ bottom:120px; }
+      100%{ bottom:10px; }
+    }
 
-/* OBSTACLES */
-.enemy{
-  width:40px;
-  height:40px;
-  background:brown;
-  position:absolute;
-  top:0;
-  border-radius:6px;
-}
-.rocket{ background:red; }
-.boss{
-  background:purple;
-  width:80px;
-  height:80px;
-}
+    .enemy{
+      width:40px;
+      height:40px;
+      background:brown;
+      position:absolute;
+      top:0;
+      border-radius:6px;
+    }
+    .rocket{ background:red; }
+    .boss{
+      background:purple;
+      width:80px;
+      height:80px;
+    }
 
-/* BULLETS */
-.bullet{
-  width:6px;
-  height:12px;
-  background:yellow;
-  position:absolute;
-  bottom:90px;
-}
-.water{
-  width:8px;
-  height:16px;
-  background:cyan;
-}
+    .bullet{
+      width:6px;
+      height:12px;
+      background:yellow;
+      position:absolute;
+      bottom:90px;
+    }
+    .water{
+      width:8px;
+      height:16px;
+      background:cyan;
+    }
 
-/* COIN */
-.coin{
-  width:16px;
-  height:16px;
-  background:gold;
-  border-radius:50%;
-  position:absolute;
-}
+    .coin{
+      width:16px;
+      height:16px;
+      background:gold;
+      border-radius:50%;
+      position:absolute;
+    }
 
-/* WHEEL */
-#wheelBox{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.8);
-}
-#wheel{
-  width:200px;
-  height:200px;
-  background:conic-gradient(gold 0 25%, red 25% 50%, blue 50% 75%, green 75% 100%);
-  border-radius:50%;
-  margin:120px auto;
-}
+    #wheelBox{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.8);
+    }
+    #wheel{
+      width:200px;
+      height:200px;
+      background:conic-gradient(gold 0 25%, red 25% 50%, blue 50% 75%, green 75% 100%);
+      border-radius:50%;
+      margin:120px auto;
+    }
 
-/* BUTTONS */
-button{
-  font-size:18px;
-  padding:10px;
-  margin:5px;
-}
-</style>
+    button{
+      font-size:18px;
+      padding:10px;
+      margin:5px;
+    }
+
+    .hint{
+      font-size:12px;
+      opacity:.8;
+      margin-top:6px;
+    }
+  </style>
 </head>
 
 <body>
+  <h2>🚗 Super Car Battle</h2>
 
-<h2>🚗 Super Car Battle</h2>
-
-<div id="hud">
-Level: <span id="level">1</span> |
-Coins: <span id="coins">0</span> |
-Gun: <span id="gun">None</span> |
-Water Fuel: <span id="fuel">5</span>
-</div>
-
-<div id="game">
-  <div id="car">
-    <div id="wheel1"></div>
-    <div id="wheel2"></div>
+  <div id="hud">
+    Level: <span id="level">1</span> |
+    Coins: <span id="coins">0</span> |
+    Gun: <span id="gun">None</span> |
+    Water Fuel: <span id="fuel">5</span>
+    <div class="hint">Keys: ← → to move, ↑ to jump, Space = shoot, Z = water</div>
   </div>
-</div>
 
-<button onclick="moveLeft()">⬅️</button>
-<button onclick="moveRight()">➡️</button>
-<button onclick="jump()">⬆️ Jump</button>
-<button onclick="shoot()">🔫</button>
-<button onclick="waterGun()">💧</button>
+  <div id="game">
+    <div id="car">
+      <div id="wheel1"></div>
+      <div id="wheel2"></div>
+    </div>
+  </div>
 
-<div id="wheelBox" onclick="closeWheel()">
-  <div id="wheel"></div>
-  <p>🎡 You spun the wheel!</p>
-</div>
+  <button onclick="moveLeft()">⬅️</button>
+  <button onclick="moveRight()">➡️</button>
+  <button onclick="jump()">⬆️ Jump</button>
+  <button onclick="shoot()">🔫</button>
+  <button onclick="waterGun()">💧</button>
 
-<script>
-const game = document.getElementById("game");
-const car = document.getElementById("car");
-const levelText = document.getElementById("level");
-const coinsText = document.getElementById("coins");
-const gunText = document.getElementById("gun");
-const fuelText = document.getElementById("fuel");
-const wheelBox = document.getElementById("wheelBox");
+  <div id="wheelBox" onclick="closeWheel()">
+    <div id="wheel"></div>
+    <p>🎡 You spun the wheel! (Tap to close)</p>
+  </div>
 
-let level = 1;
-let coins = 0;
-let speed = 2;
-let spawnRate = 1400;
-let playing = true;
+  <script>
+    const game = document.getElementById("game");
+    const car = document.getElementById("car");
 
-let hasGun = false;
-let waterFuel = 5;
-let dodged = 0;
+    const levelText = document.getElementById("level");
+    const coinsText = document.getElementById("coins");
+    const gunText = document.getElementById("gun");
+    const fuelText = document.getElementById("fuel");
+    const wheelBox = document.getElementById("wheelBox");
 
-/* MOVE */
-function moveLeft(){
-  if(car.offsetLeft > 0)
-    car.style.left = car.offsetLeft - 30 + "px";
-}
-function moveRight(){
-  if(car.offsetLeft < 310)
-    car.style.left = car.offsetLeft + 30 + "px";
-}
+    let level = 1;
+    let coins = 0;
+    let speed = 2;
+    let spawnRate = 1400;
+    let playing = true;
 
-/* JUMP */
-function jump(){
-  if(!car.classList.contains("jump")){
-    car.classList.add("jump");
-    setTimeout(()=>car.classList.remove("jump"),600);
-  }
-}
+    let hasGun = false;
+    let waterFuel = 5;
+    let dodged = 0;
 
-/* SHOOT */
-function shoot(){
-  if(!hasGun) return;
+    const MAX_LEFT = 0;
+    const MAX_RIGHT = 360 - 50; // game width - car width
 
-  const b = document.createElement("div");
-  b.className = "bullet";
-  b.style.left = car.offsetLeft + 22 + "px";
-  game.appendChild(b);
+    // Keep arrays of active objects
+    let enemies = [];
+    let bullets = [];
 
-  const fly = setInterval(()=>{
-    b.style.bottom = (b.offsetBottom || 90) + 10 + "px";
+    // --- movement helpers ---
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
-    enemies.forEach(e=>{
-      if(hit(b,e)){
-        if(e.classList.contains("rocket")){
-          addCoin(e.offsetLeft,e.offsetTop);
+    function moveLeft(){
+      if(!playing) return;
+      const x = clamp(car.offsetLeft - 30, MAX_LEFT, MAX_RIGHT);
+      car.style.left = x + "px";
+    }
+
+    function moveRight(){
+      if(!playing) return;
+      const x = clamp(car.offsetLeft + 30, MAX_LEFT, MAX_RIGHT);
+      car.style.left = x + "px";
+    }
+
+    function jump(){
+      if(!playing) return;
+      if(!car.classList.contains("jump")){
+        car.classList.add("jump");
+        setTimeout(()=>car.classList.remove("jump"),600);
+      }
+    }
+
+    // --- collision ---
+    function hit(a,b){
+      const ar = a.getBoundingClientRect();
+      const br = b.getBoundingClientRect();
+      return !(ar.right < br.left || ar.left > br.right ||
+               ar.bottom < br.top || ar.top > br.bottom);
+    }
+
+    // --- bullets ---
+    function makeBullet(type){
+      const el = document.createElement("div");
+      el.className = type === "water" ? "bullet water" : "bullet";
+      el.style.left = (car.offsetLeft + 22) + "px";
+      el.style.bottom = "90px";
+      game.appendChild(el);
+
+      bullets.push({
+        el,
+        vy: type === "water" ? 12 : 10,
+        type
+      });
+    }
+
+    function shoot(){
+      if(!playing) return;
+      if(!hasGun) return;
+      makeBullet("normal");
+    }
+
+    function waterGun(){
+      if(!playing) return;
+      if(waterFuel <= 0) return;
+      waterFuel--;
+      fuelText.textContent = waterFuel;
+      makeBullet("water");
+    }
+
+    // --- enemies ---
+    function spawnEnemy(){
+      if(!playing) return;
+
+      const e = document.createElement("div");
+
+      if(level % 10 === 0){
+        e.className = "enemy boss";
+      }else if(level === 1){
+        e.className = "enemy";
+      }else{
+        e.className = "enemy rocket";
+      }
+
+      e.style.left = Math.floor(Math.random()*321) + "px";
+      e.style.top = "0px";
+      game.appendChild(e);
+
+      enemies.push({ el: e });
+    }
+
+    let spawner = setInterval(spawnEnemy, spawnRate);
+
+    // --- coins + wheel ---
+    function addCoin(){
+      coins++;
+      coinsText.textContent = coins;
+      if(coins % 100 === 0){
+        openWheel();
+      }
+    }
+
+    function openWheel(){
+      wheelBox.style.display = "block";
+    }
+    function closeWheel(){
+      wheelBox.style.display = "none";
+      waterFuel += 3;
+      fuelText.textContent = waterFuel;
+    }
+
+    // --- level up ---
+    function nextLevel(){
+      level++;
+      levelText.textContent = level;
+
+      speed += 0.7;
+      if(spawnRate > 500) spawnRate -= 100;
+
+      clearInterval(spawner);
+      spawner = setInterval(spawnEnemy, spawnRate);
+
+      if(level % 10 === 1 && level > 1){
+        hasGun = true;
+        gunText.textContent = "Blaster";
+      }
+
+      alert(level % 10 === 0 ? "👑 BOSS LEVEL!" : "⚡ LEVEL " + level);
+    }
+
+    // --- game over ---
+    function gameOver(){
+      if(!playing) return;
+      playing = false;
+      clearInterval(spawner);
+      alert("💥 GAME OVER!\nLevel: " + level + "\nCoins: " + coins);
+      location.reload();
+    }
+
+    // --- main update loop (smooth + no runaway intervals) ---
+    function tick(){
+      if(!playing) return;
+
+      // Move enemies down
+      for(let i = enemies.length - 1; i >= 0; i--){
+        const e = enemies[i].el;
+        e.style.top = (e.offsetTop + speed) + "px";
+
+        // hit car
+        if(hit(e, car)){
+          gameOver();
+          return;
         }
-        e.remove();
-        b.remove();
+
+        // offscreen
+        if(e.offsetTop > 520){
+          e.remove();
+          enemies.splice(i, 1);
+
+          dodged++;
+          if(dodged % 50 === 0) nextLevel();
+        }
       }
-    });
-  },20);
-}
 
-/* WATER GUN */
-function waterGun(){
-  if(waterFuel <= 0) return;
-  waterFuel--;
-  fuelText.textContent = waterFuel;
+      // Move bullets up + handle bullet hits
+      for(let i = bullets.length - 1; i >= 0; i--){
+        const b = bullets[i].el;
+        const cur = parseInt(b.style.bottom || "90", 10);
+        b.style.bottom = (cur + bullets[i].vy) + "px";
 
-  const w = document.createElement("div");
-  w.className = "bullet water";
-  w.style.left = car.offsetLeft + 22 + "px";
-  game.appendChild(w);
+        // remove if offscreen
+        if(cur > 560){
+          b.remove();
+          bullets.splice(i, 1);
+          continue;
+        }
 
-  const fly = setInterval(()=>{
-    w.style.bottom = (w.offsetBottom || 90) + 12 + "px";
-    enemies.forEach(e=>{
-      if(hit(w,e)){
-        e.remove();
-        w.remove();
+        // check bullet vs enemies
+        for(let j = enemies.length - 1; j >= 0; j--){
+          const e = enemies[j].el;
+          if(hit(b, e)){
+            // coin reward for rockets (same as your idea)
+            if(e.classList.contains("rocket")){
+              addCoin();
+            }
+            e.remove();
+            enemies.splice(j, 1);
+
+            b.remove();
+            bullets.splice(i, 1);
+            break;
+          }
+        }
       }
+
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    // --- keyboard controls ---
+    document.addEventListener("keydown", (ev) => {
+      if(ev.key === "ArrowLeft") moveLeft();
+      if(ev.key === "ArrowRight") moveRight();
+      if(ev.key === "ArrowUp") jump();
+      if(ev.code === "Space") { ev.preventDefault(); shoot(); }
+      if(ev.key.toLowerCase() === "z") waterGun();
     });
-  },20);
-}
-
-/* ENEMIES */
-let enemies = [];
-
-function spawnEnemy(){
-  if(!playing) return;
-
-  const e = document.createElement("div");
-
-  if(level % 10 === 0){
-    e.className = "enemy boss";
-  }else if(level === 1){
-    e.className = "enemy";
-  }else{
-    e.className = "enemy rocket";
-  }
-
-  e.style.left = Math.random()*320 + "px";
-  e.style.top = "0px";
-  game.appendChild(e);
-  enemies.push(e);
-
-  const fall = setInterval(()=>{
-    e.style.top = e.offsetTop + speed + "px";
-
-    if(hit(e,car)){
-      gameOver();
-    }
-
-    if(e.offsetTop > 520){
-      e.remove();
-      enemies = enemies.filter(x=>x!==e);
-      clearInterval(fall);
-
-      dodged++;
-      if(dodged % 50 === 0) nextLevel();
-    }
-  },20);
-}
-
-let spawner = setInterval(spawnEnemy, spawnRate);
-
-/* HIT CHECK */
-function hit(a,b){
-  const ar=a.getBoundingClientRect();
-  const br=b.getBoundingClientRect();
-  return !(ar.right < br.left || ar.left > br.right ||
-           ar.bottom < br.top || ar.top > br.bottom);
-}
-
-/* COINS */
-function addCoin(x,y){
-  coins++;
-  coinsText.textContent = coins;
-
-  if(coins % 100 === 0){
-    openWheel();
-  }
-}
-
-/* LEVEL UP */
-function nextLevel(){
-  level++;
-  levelText.textContent = level;
-
-  speed += 0.7;
-  if(spawnRate > 500) spawnRate -= 100;
-
-  clearInterval(spawner);
-  spawner = setInterval(spawnEnemy, spawnRate);
-
-  if(level % 10 === 1 && level>1){
-    hasGun = true;
-    gunText.textContent = "Blaster";
-  }
-
-  alert(level % 10 === 0 ? "👑 BOSS LEVEL!" : "⚡ LEVEL "+level);
-}
-
-/* WHEEL */
-function openWheel(){
-  wheelBox.style.display="block";
-}
-function closeWheel(){
-  wheelBox.style.display="none";
-  waterFuel += 3;
-  fuelText.textContent = waterFuel;
-}
-
-/* GAME OVER */
-function gameOver(){
-  playing=false;>
-  alert("💥 GAME OVER!\nLevel: "+level+"\nCoins: "+coins);
-  location.reload();
-}
-</script>
-
+  </script>
 </body>
 </html>
