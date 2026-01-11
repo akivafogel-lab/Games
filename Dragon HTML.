@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>🐉 Dragon Click</h2>
+<p id="fire">Fire: 0</p>
+<button onclick="breathe()">Breathe Fire</button>
+
+<script>
+let f=0;
+function breathe(){
+  f++;
+  document.getElementById("fire").innerText="Fire: "+f;
+}
+</script>
+</body>
+</html>
