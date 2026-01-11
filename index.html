@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Mini Roblox</title>
+<style>
+body{
+  background:#111;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+}
+button{
+  font-size:22px;
+  padding:15px 25px;
+  margin:10px;
+}
+iframe{
+  width:360px;
+  height:520px;
+  border:4px solid white;
+  border-radius:10px;
+}
+</style>
+</head>
 
+<body>
+
+<h1>🎮 My Mini Roblox</h1>
+<p>Pick a game:</p>
+
+<button onclick="loadGame('bus')">🚌 Bus Game</button>
+<button onclick="loadGame('police')">🚓 Police Chase</button>
+<button onclick="loadGame('race')">🏎️ Racing</button>
+<button onclick="loadGame('obby')">🧗 Obby</button>
+<button onclick="loadGame('boss')">👑 Boss Fight</button>
+
+<br><br>
+
+<iframe id="gameFrame"></iframe>
+
+<script>
+function loadGame(game){
+  const frame = document.getElementById("gameFrame");
+
+  if(game==="bus") frame.src="bus.html";
+  if(game==="police") frame.src="police.html";
+  if(game==="race") frame.src="race.html";
+  if(game==="obby") frame.src="obby.html";
+  if(game==="boss") frame.src="boss.html";
+}
+</script>
+
+</body>
+</html>
