@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>🥷 Ninja Run</h2>
+<p id="steps">Steps: 0</p>
+<button onclick="run()">Run</button>
+
+<script>
+let r=0;
+function run(){
+  r++;
+  document.getElementById("steps").innerText="Steps: "+r;
+}
+</script>
+</body>
+</html>
