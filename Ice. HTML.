@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+<h2>🧊 Ice Breaker</h2>
+<p id="cracks">Cracks: 0</p>
+<button onclick="breakIce()">Break</button>
+
+<script>
+let i=0;
+function breakIce(){
+  i++;
+  document.getElementById("cracks").innerText="Cracks: "+i;
+}
+</script>
+</body>
+</html>
